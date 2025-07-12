@@ -6,7 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import edu.mimo.books.dto.BookCreationDto;
 import edu.mimo.books.dto.BookDto;
 import edu.mimo.books.entity.Author;
-import edu.mimo.books.entity.Book;
+import edu.mimo.books.entity.Musical;
 import edu.mimo.books.mapper.BookMapper;
 import edu.mimo.books.repository.AuthorRepository;
 import edu.mimo.books.repository.BookRepository;
@@ -32,9 +32,9 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public List<BookDto> getAllBooks() {
-        List<Book> books = bookRepository.findAll();
+        List<Musical> books = bookRepository.findAll();
         List<BookDto> dtos = new ArrayList<>();
-        for (Book book : books) {
+        for (Musical book : books) {
             BookDto dto = bookMapper.toDto(book);
             dtos.add(dto);
         }
@@ -43,9 +43,9 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public List<BookDto> byAuthorId(Integer authorId) {
-        List<Book> books = bookRepository.findByAuthorId(authorId);
+        List<Musical> books = bookRepository.findByAuthorId(authorId);
         List<BookDto> dtos = new ArrayList<>();
-        for (Book book : books) {
+        for (Musical book : books) {
             BookDto dto = bookMapper.toDto(book);
             dtos.add(dto);
         }
@@ -62,9 +62,9 @@ public class BookServiceImpl implements BookService {
     public Optional<BookDto> createBook(BookCreationDto bookCreateDto) {
         return authorRepository.findById(bookCreateDto.getAuthorId())
         .map(author -> {
-            Book book = bookMapper.toEntity(bookCreateDto);
+            Musical book = bookMapper.toEntity(bookCreateDto);
             book.setAuthor(author);
-            Book saved = bookRepository.save(book);
+            Musical saved = bookRepository.save(book);
             return bookMapper.toDto(saved);
         });
     }
@@ -73,12 +73,12 @@ public class BookServiceImpl implements BookService {
     public Optional<BookDto> updateBook(Integer id, BookCreationDto bookCreateDto) {
         return bookRepository.findById(id)
         .map(existing -> {
-            Book toUpdate = bookMapper.toEntity(bookCreateDto);
+            Musical toUpdate = bookMapper.toEntity(bookCreateDto);
             toUpdate.setId(id);
             Author author = authorRepository.findById(bookCreateDto.getAuthorId())
             .orElse(existing.getAuthor());
             toUpdate.setAuthor(author);
-            Book saved = bookRepository.save(toUpdate);
+            Musical saved = bookRepository.save(toUpdate);
             return bookMapper.toDto(saved);
         });
     }
